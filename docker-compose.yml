@@ -6,7 +6,7 @@ services:
     php:
         build: .docker/php
         ports:
-            - 5173:5173
+            - 5174:5173
         volumes:
             - .:/var/www:cached
 
@@ -16,7 +16,7 @@ services:
     nginx:
         image: nginx
         ports:
-            - 80:80
+            - 8060:80
         volumes:
             - .:/var/www
             - .docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
@@ -30,7 +30,7 @@ services:
     db:
         image: mysql:8.1
         ports:
-            - 3306:3306
+            - 3307:3306
         volumes:
             - .docker/db/data:/var/lib/mysql
             - .docker/logs:/var/log/mysql
@@ -46,17 +46,16 @@ services:
     # phpMyAdmin
     ####################################################################################################
     phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        ports:
-            - 8080:80
-        links:
-            - db
-        environment:
-            PMA_HOST: db
-            PMA_PORT: 3306
-            PMA_ARBITRARY: 1
-        volumes:
-            - .docker/phpmyadmin/sessions:/sessions
+      image: phpmyadmin/phpmyadmin:5.2
+      restart: always
+      ports:
+        - "8090:80"
+      environment:
+        - PMA_HOST=db
+        - PMA_PORT=3306
+        - PMA_ARBITRARY=1
+      volumes:
+        - .docker/phpmyadmin/sessions:/sessions
 
     ####################################################################################################
     # Adminer
@@ -74,8 +73,8 @@ services:
     mail:
         image: axllent/mailpit:latest
         ports:
-        - 8025:8025
-        - 1025:1025
+        - 8026:8025
+        - 1026:1025
 
     ####################################################################################################
     # Redis
@@ -86,7 +85,7 @@ services:
         volumes:
         - .docker/redis/data:/data
         ports:
-        - 6379:6379
+        - 6380:6379
 
     # ####################################################################################################
     # # DATABASE (MariaDB)
